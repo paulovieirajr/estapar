@@ -18,3 +18,8 @@ management:
       base-path: /
       exposure:
         include: health
+
+estapar:
+  garage:
+    simulator:
+      url: ${ESTAPAR_GARAGE_SIMULATOR_URL:http://localhost:3000/garage}
