@@ -1,0 +1,30 @@
+services:
+  mysql:
+    image: 'mysql:oraclelinux9'
+    container_name: mysql_estapar
+    platform: linux/amd64/v8
+    environment:
+      - 'MYSQL_DATABASE=estapar'
+      - 'MYSQL_PASSWORD=estaparsecret'
+      - 'MYSQL_ROOT_PASSWORD=estaparsecret'
+      - 'MYSQL_USER=estapar'
+    ports:
+      - '3306:3306'
+    volumes:
+      - 'mysql_data:/var/lib/mysql'
+    networks:
+      - 'estapar'
+
+  estapar-simulator:
+    image: 'cfontes0estapar/garage-sim:1.0.0'
+    container_name: estapar_simulator
+    ports:
+      - '3000:3000'
+    networks:
+      - 'estapar'
+
+volumes:
+  mysql_data:
+
+networks:
+  estapar:

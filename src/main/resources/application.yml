@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: estapar
+
+  datasource:
+    url: ${JDBC_URL:jdbc:mysql://mysql:3306/estapar}
+    username: ${MYSQL_USER:estapar}
+    password: ${MYSQL_PASSWORD:estaparsecret}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+management:
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: health
