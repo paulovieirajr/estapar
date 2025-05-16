@@ -2,6 +2,11 @@ spring:
   application:
     name: estapar
 
+  sql:
+    init:
+      schema-locations: classpath:scripts/init.sql
+      mode: always
+
   datasource:
     url: ${JDBC_URL:jdbc:mysql://mysql:3306/estapar}
     username: ${MYSQL_USER:estapar}
