@@ -5,7 +5,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 public record Sector(
-        String code,
+        String sectorCode,
         BigDecimal basePrice,
         Integer maxCapacity,
         LocalTime openHour,

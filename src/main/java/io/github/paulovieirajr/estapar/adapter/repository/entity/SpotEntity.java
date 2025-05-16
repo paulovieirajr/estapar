@@ -25,7 +25,7 @@ public class SpotEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
-            name = "code",
+            name = "sector_code",
             nullable = false,
             foreignKey = @ForeignKey(name = "fk_spot_sector")
     )
@@ -45,15 +45,14 @@ public class SpotEntity {
     public SpotEntity() {
     }
 
-    public SpotEntity(Integer id, Double latitude, Double longitude, SectorEntity sector,
-                      boolean occupied, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public SpotEntity(Integer id,
+                      Double latitude,
+                      Double longitude,
+                      boolean occupied) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.sector = sector;
         this.occupied = occupied;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
     public Spot toDomain() {

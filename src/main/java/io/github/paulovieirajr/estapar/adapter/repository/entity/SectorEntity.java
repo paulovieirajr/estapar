@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,8 +16,8 @@ import java.util.List;
 public class SectorEntity {
 
     @Id
-    @Column(name = "code", nullable = false, length = 5)
-    private String code;
+    @Column(name = "sector_code", nullable = false, length = 5)
+    private String sectorCode;
 
     @Column(name = "base_price", nullable = false)
     private BigDecimal basePrice;
@@ -42,7 +43,7 @@ public class SectorEntity {
     private GarageEntity garage;
 
     @OneToMany(mappedBy = "sector", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<SpotEntity> spots;
+    private List<SpotEntity> spots = new ArrayList<>();
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -55,24 +56,19 @@ public class SectorEntity {
     public SectorEntity() {
     }
 
-    public SectorEntity(String code, BigDecimal basePrice, Integer maxCapacity, LocalTime openHour,
-                        LocalTime closeHour, Integer durationLimitMinutes, GarageEntity garage,
-                        List<SpotEntity> spots, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.code = code;
+    public SectorEntity(String sectorCode, BigDecimal basePrice, Integer maxCapacity,
+                        LocalTime openHour, LocalTime closeHour, Integer durationLimitMinutes) {
+        this.sectorCode = sectorCode;
         this.basePrice = basePrice;
         this.maxCapacity = maxCapacity;
         this.openHour = openHour;
         this.closeHour = closeHour;
         this.durationLimitMinutes = durationLimitMinutes;
-        this.garage = garage;
-        this.spots = spots;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
     public Sector toDomain() {
         return new Sector(
-                this.code,
+                this.sectorCode,
                 this.basePrice,
                 this.maxCapacity,
                 this.openHour,
@@ -84,7 +80,7 @@ public class SectorEntity {
     }
 
     public SectorEntity fromDomain(Sector sector) {
-        this.code = sector.code();
+        this.sectorCode = sector.sectorCode();
         this.basePrice = sector.basePrice();
         this.maxCapacity = sector.maxCapacity();
         this.openHour = sector.openHour();
@@ -100,12 +96,12 @@ public class SectorEntity {
         return this;
     }
 
-    public String getCode() {
-        return code;
+    public String getSectorCode() {
+        return sectorCode;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setSectorCode(String sector) {
+        this.sectorCode = sector;
     }
 
     public BigDecimal getBasePrice() {
@@ -160,8 +156,17 @@ public class SectorEntity {
         return spots;
     }
 
-    public void setSpots(List<SpotEntity> spotEntities) {
-        this.spots = spotEntities;
+    public void addSpot(SpotEntity spotEntity) {
+        if (spotEntity == null) {
+            throw new IllegalArgumentException("Spot cannot be null");
+        }
+        spotEntity.setSector(this);
+        this.spots.add(spotEntity);
+    }
+
+    public void removeSpot(SpotEntity spotEntity) {
+        spotEntity.setSector(null);
+        this.spots.remove(spotEntity);
     }
 
     public LocalDateTime getCreatedAt() {

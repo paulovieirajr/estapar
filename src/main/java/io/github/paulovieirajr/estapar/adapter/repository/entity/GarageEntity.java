@@ -25,10 +25,6 @@ public class GarageEntity {
 
     public GarageEntity() {}
 
-    public GarageEntity(List<SectorEntity> sectors) {
-        this.sectors = (sectors != null) ? sectors : new ArrayList<>();
-    }
-
     public Garage toDomain() {
         return new Garage(this.id, this.sectors.stream().map(SectorEntity::toDomain).toList());
     }
