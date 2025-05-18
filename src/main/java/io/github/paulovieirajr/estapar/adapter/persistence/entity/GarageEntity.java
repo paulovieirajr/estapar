@@ -30,7 +30,7 @@ public class GarageEntity {
     }
 
     public GarageEntity fromDomain(Garage garage) {
-        this.id = garage.id();
+        this.id = garage.getId();
         this.sectors = garage.sectors().stream().map(sector -> {
             SectorEntity sectorEntity = new SectorEntity();
             sectorEntity.fromDomain(sector);

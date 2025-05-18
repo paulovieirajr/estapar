@@ -80,14 +80,14 @@ public class SectorEntity {
     }
 
     public SectorEntity fromDomain(Sector sector) {
-        this.sectorCode = sector.sectorCode();
-        this.basePrice = sector.basePrice();
-        this.maxCapacity = sector.maxCapacity();
-        this.openHour = sector.openHour();
-        this.closeHour = sector.closeHour();
-        this.durationLimitMinutes = sector.durationLimitMinutes();
-        this.garage = new GarageEntity().fromDomain(sector.garage());
-        this.spots = sector.spots().stream().map(spot -> {
+        this.sectorCode = sector.getSectorCode();
+        this.basePrice = sector.getBasePrice();
+        this.maxCapacity = sector.getMaxCapacity();
+        this.openHour = sector.getOpenHour();
+        this.closeHour = sector.getCloseHour();
+        this.durationLimitMinutes = sector.getDurationLimitMinutes();
+        this.garage = new GarageEntity().fromDomain(sector.getGarage());
+        this.spots = sector.getSpots().stream().map(spot -> {
             SpotEntity spotEntity = new SpotEntity();
             spotEntity.fromDomain(spot);
             spotEntity.setSector(this);

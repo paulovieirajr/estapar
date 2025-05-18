@@ -5,10 +5,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-public record Garage(
-        UUID id,
-        List<Sector> sectors
-) {
+public final class Garage {
+
+    private final UUID id;
+    private final List<Sector> sectors;
 
     public Garage(UUID id, List<Sector> sectors) {
         if (id == null || sectors == null) {
@@ -18,7 +18,10 @@ public record Garage(
         this.sectors = new ArrayList<>(sectors);
     }
 
-    @Override
+    public UUID getId() {
+        return id;
+    }
+
     public List<Sector> sectors() {
         return Collections.unmodifiableList(sectors);
     }

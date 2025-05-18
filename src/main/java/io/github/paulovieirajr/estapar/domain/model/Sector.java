@@ -4,15 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.List;
 
-public record Sector(
-        String sectorCode,
-        BigDecimal basePrice,
-        Integer maxCapacity,
-        LocalTime openHour,
-        LocalTime closeHour,
-        Integer durationLimitMinutes,
-        Garage garage, List<Spot> spots
-) {
+public final class Sector {
 
     public static final double TWENTY_FIVE_PERCENT_OCCUPANCY_RATE = 0.25;
     public static final double TEN_PERCENT_DISCOUNT_RATE = 0.9;
@@ -22,8 +14,33 @@ public record Sector(
     public static final double TEN_PERCENT_SURCHARGE_RATE = 1.0;
     public static final double TWENTY_FIVE_PERCENT_SURCHARGE_RATE = 1.25;
 
+    private final String sectorCode;
+    private final BigDecimal basePrice;
+    private final Integer maxCapacity;
+    private final LocalTime openHour;
+    private final LocalTime closeHour;
+    private final Integer durationLimitMinutes;
+    private final Garage garage;
+    private final List<Spot> spots;
+
+    public Sector(String sectorCode, BigDecimal basePrice, Integer maxCapacity, LocalTime openHour,
+                  LocalTime closeHour, Integer durationLimitMinutes, Garage garage, List<Spot> spots) {
+        this.sectorCode = sectorCode;
+        this.basePrice = basePrice;
+        this.maxCapacity = maxCapacity;
+        this.openHour = openHour;
+        this.closeHour = closeHour;
+        this.durationLimitMinutes = durationLimitMinutes;
+        this.garage = garage;
+        this.spots = spots;
+    }
+
+    public BigDecimal getBasePrice() {
+        return basePrice;
+    }
+
     public boolean canEntry(LocalTime entryTime) {
-        return !entryTime.isBefore(openHour()) && !entryTime.isAfter(closeHour());
+        return !entryTime.isBefore(this.openHour) && !entryTime.isAfter(this.openHour);
     }
 
     public double getDynamicPricingRate() {
@@ -38,15 +55,35 @@ public record Sector(
         if (maxCapacity == null || maxCapacity <= 0) {
             return 0.0;
         }
-        long occupiedSpots = spots.stream().filter(Spot::occupied).count();
+        long occupiedSpots = spots.stream().filter(Spot::isOccupied).count();
         return (double) occupiedSpots / maxCapacity;
     }
 
-    public void addSpot(Spot spot) {
-        this.spots.add(spot);
+    public String getSectorCode() {
+        return sectorCode;
     }
 
-    public void removeSpot(Spot spot) {
-        this.spots.remove(spot);
+    public Integer getMaxCapacity() {
+        return maxCapacity;
+    }
+
+    public LocalTime getOpenHour() {
+        return openHour;
+    }
+
+    public LocalTime getCloseHour() {
+        return closeHour;
+    }
+
+    public Integer getDurationLimitMinutes() {
+        return durationLimitMinutes;
+    }
+
+    public Garage getGarage() {
+        return garage;
+    }
+
+    public List<Spot> getSpots() {
+        return spots;
     }
 }

@@ -66,11 +66,11 @@ public class SpotEntity {
     }
 
     public SpotEntity fromDomain(Spot spot) {
-        this.id = spot.id();
-        this.latitude = spot.latitude();
-        this.longitude = spot.longitude();
-        this.sector = new SectorEntity().fromDomain(spot.sector());
-        this.occupied = spot.occupied();
+        this.id = spot.getId();
+        this.latitude = spot.getLatitude();
+        this.longitude = spot.getLongitude();
+        this.sector = new SectorEntity().fromDomain(spot.getSector());
+        this.occupied = spot.isOccupied();
         return this;
     }
 
