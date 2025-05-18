@@ -15,14 +15,6 @@ services:
     networks:
       - 'estapar'
 
-  estapar-simulator:
-    image: 'cfontes0estapar/garage-sim:1.0.0'
-    container_name: estapar_simulator
-    ports:
-      - '3000:3000'
-    networks:
-      - 'estapar'
-
 volumes:
   mysql_data:
 

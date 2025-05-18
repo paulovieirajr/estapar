@@ -18,4 +18,12 @@ public final class WebhookEventParkedDto extends WebhookEvent {
     @DecimalMax(value = "180.0", message = "Longitude must be less than or equal to 180.0")
     @JsonProperty("lng")
     Double longitude;
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
 }

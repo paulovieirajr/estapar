@@ -12,4 +12,8 @@ public final class WebhookEventExitDto extends WebhookEvent{
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
         @JsonProperty("exit_time")
         LocalDateTime exitTime;
+
+        public LocalDateTime getExitTime() {
+            return exitTime;
+        }
 }

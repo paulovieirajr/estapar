@@ -15,4 +15,12 @@ public sealed class WebhookEvent permits WebhookEventEntryDto, WebhookEventExitD
     @NotEmpty
     @JsonProperty("event_type")
     EventType eventType;
+
+    public String getLicensePlate() {
+        return licensePlate;
+    }
+
+    public EventType getEventType() {
+        return eventType;
+    }
 }

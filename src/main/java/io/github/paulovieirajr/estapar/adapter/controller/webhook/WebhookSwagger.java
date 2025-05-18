@@ -18,5 +18,5 @@ public interface WebhookSwagger {
     @ApiResponse(responseCode = "404", description = "Not Found")
     @ApiResponse(responseCode = "409", description = "Conflict")
     @ApiResponse(responseCode = "500", description = "Internal Server Error")
-    ResponseEntity<WebhookResponse> handleWebhookEvent(@RequestBody WebhookEvent event);
+    ResponseEntity<WebhookResponse> processWebhookEvent(@RequestBody WebhookEvent event);
 }

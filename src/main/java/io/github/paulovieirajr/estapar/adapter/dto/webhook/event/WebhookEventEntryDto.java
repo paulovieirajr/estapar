@@ -12,4 +12,8 @@ public final class WebhookEventEntryDto extends WebhookEvent {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
     @JsonProperty("entry_time")
     LocalDateTime entryTime;
+
+    public LocalDateTime getEntryTime() {
+        return entryTime;
+    }
 }
