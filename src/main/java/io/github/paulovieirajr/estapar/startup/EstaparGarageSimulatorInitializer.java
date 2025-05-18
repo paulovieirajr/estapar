@@ -2,8 +2,8 @@ package io.github.paulovieirajr.estapar.startup;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.paulovieirajr.estapar.adapter.dto.EstaparDataSimulatorDto;
-import io.github.paulovieirajr.estapar.adapter.dto.SectorDto;
+import io.github.paulovieirajr.estapar.adapter.dto.simulator.EstaparDataSimulatorDto;
+import io.github.paulovieirajr.estapar.adapter.dto.simulator.SectorDto;
 import io.github.paulovieirajr.estapar.adapter.persistence.repository.GarageRepository;
 import io.github.paulovieirajr.estapar.adapter.persistence.repository.SectorRepository;
 import io.github.paulovieirajr.estapar.adapter.persistence.repository.SpotRepository;

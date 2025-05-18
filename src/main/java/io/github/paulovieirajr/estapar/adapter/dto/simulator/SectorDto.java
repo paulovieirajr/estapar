@@ -1,4 +1,4 @@
-package io.github.paulovieirajr.estapar.adapter.dto;
+package io.github.paulovieirajr.estapar.adapter.dto.simulator;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.github.paulovieirajr.estapar.adapter.persistence.entity.SectorEntity;
