@@ -2,6 +2,13 @@ spring:
   application:
     name: estapar
 
+  docker:
+    compose:
+      lifecycle-management: start-and-stop
+      stop:
+        command: down
+        arguments: --volumes
+
   sql:
     init:
       schema-locations: classpath:scripts/init.sql
