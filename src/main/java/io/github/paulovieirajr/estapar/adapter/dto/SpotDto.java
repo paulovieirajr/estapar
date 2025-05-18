@@ -1,12 +1,12 @@
 package io.github.paulovieirajr.estapar.adapter.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.github.paulovieirajr.estapar.adapter.repository.entity.SpotEntity;
+import io.github.paulovieirajr.estapar.adapter.persistence.entity.SpotEntity;
 
 import java.io.Serializable;
 
 /**
- * DTO for {@link io.github.paulovieirajr.estapar.adapter.repository.entity.SpotEntity}
+ * DTO for {@link io.github.paulovieirajr.estapar.adapter.persistence.entity.SpotEntity}
  */
 public record SpotDto(
         @JsonProperty("id")

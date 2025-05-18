@@ -1,14 +1,14 @@
 package io.github.paulovieirajr.estapar.adapter.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.github.paulovieirajr.estapar.adapter.repository.entity.SectorEntity;
+import io.github.paulovieirajr.estapar.adapter.persistence.entity.SectorEntity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalTime;
 
 /**
- * DTO for {@link io.github.paulovieirajr.estapar.adapter.repository.entity.SectorEntity}
+ * DTO for {@link io.github.paulovieirajr.estapar.adapter.persistence.entity.SectorEntity}
  */
 public record SectorDto(
         @JsonProperty("sector")

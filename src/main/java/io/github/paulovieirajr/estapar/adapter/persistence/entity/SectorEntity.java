@@ -1,4 +1,4 @@
-package io.github.paulovieirajr.estapar.adapter.repository.entity;
+package io.github.paulovieirajr.estapar.adapter.persistence.entity;
 
 import io.github.paulovieirajr.estapar.domain.model.Sector;
 import jakarta.persistence.*;
