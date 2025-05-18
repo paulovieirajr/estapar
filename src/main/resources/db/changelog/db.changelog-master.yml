@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: paulo vieira
+      changes:
+        - sqlFile:
+            path: db/sql/1-create-garage-sector-spot-tables.sql
+            relativeToChangelogFile: false

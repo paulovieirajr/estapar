@@ -1,18 +1,14 @@
+server:
+  port: 3003
+
 spring:
   application:
     name: estapar
 
-  docker:
-    compose:
-      lifecycle-management: start-and-stop
-      stop:
-        command: down
-        arguments: --volumes
-
-  sql:
-    init:
-      schema-locations: classpath:scripts/init.sql
-      mode: embedded
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yml
+    contexts: development
 
   datasource:
     url: ${JDBC_URL:jdbc:mysql://mysql:3306/estapar}
