@@ -5,7 +5,7 @@ import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 
-public final class WebhookEventParkedDto extends WebhookEvent {
+public final class WebhookEventParkedDto extends WebhookEventDto {
 
     @NotNull
     @DecimalMin(value = "-90.0", message = "Latitude must be greater than or equal to -90.0")

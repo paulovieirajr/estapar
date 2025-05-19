@@ -1,7 +1,7 @@
 package io.github.paulovieirajr.estapar.adapter.controller.webhook;
 
-import io.github.paulovieirajr.estapar.adapter.dto.webhook.WebhookResponse;
-import io.github.paulovieirajr.estapar.adapter.dto.webhook.event.WebhookEvent;
+import io.github.paulovieirajr.estapar.adapter.dto.webhook.event.WebhookEventResponseDto;
+import io.github.paulovieirajr.estapar.adapter.dto.webhook.event.WebhookEventDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,5 +18,5 @@ public interface WebhookSwagger {
     @ApiResponse(responseCode = "404", description = "Not Found")
     @ApiResponse(responseCode = "409", description = "Conflict")
     @ApiResponse(responseCode = "500", description = "Internal Server Error")
-    ResponseEntity<WebhookResponse> processWebhookEvent(@RequestBody WebhookEvent event);
+    ResponseEntity<WebhookEventResponseDto> processWebhookEvent(@RequestBody WebhookEventDto event);
 }

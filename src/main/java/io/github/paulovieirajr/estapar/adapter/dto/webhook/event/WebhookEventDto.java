@@ -5,7 +5,7 @@ import io.github.paulovieirajr.estapar.adapter.dto.webhook.enums.EventType;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 
-public sealed class WebhookEvent permits WebhookEventEntryDto, WebhookEventExitDto, WebhookEventParkedDto {
+public sealed class WebhookEventDto permits WebhookEventEntryDto, WebhookEventExitDto, WebhookEventParkedDto {
 
     @NotEmpty
     @Pattern(regexp = "^[A-Z]{3}\\d{4}$|^[A-Z]{3}\\d{2}[A-Z]\\d{2}$", message = "Invalid license plate format")
