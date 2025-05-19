@@ -66,11 +66,6 @@ public class EstaparGarageSimulatorInitializer implements ApplicationRunner {
         saveRecoveredEntities(garageEntity, sectors, spots);
     }
 
-    private static List<SectorEntity> recoverSectorEntities(EstaparDataSimulatorDto data) {
-        LOGGER.info("Recovering sector entities...");
-        return data.sectors().stream().map(SectorDto::toEntity).toList();
-    }
-
     private static GarageEntity recoverGarageEntity(List<SectorEntity> sectors) {
         LOGGER.info("Recovering garage entity...");
         GarageEntity garageEntity = new GarageEntity();
@@ -79,6 +74,11 @@ public class EstaparGarageSimulatorInitializer implements ApplicationRunner {
             garageEntity.addSector(sector);
         }
         return garageEntity;
+    }
+
+    private static List<SectorEntity> recoverSectorEntities(EstaparDataSimulatorDto data) {
+        LOGGER.info("Recovering sector entities...");
+        return data.sectors().stream().map(SectorDto::toEntity).toList();
     }
 
     private static List<SpotEntity> recoverSpotEntities(EstaparDataSimulatorDto data, List<SectorEntity> sectors) {

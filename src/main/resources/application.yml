@@ -5,6 +5,12 @@ spring:
   application:
     name: estapar
 
+  docker:
+    compose:
+      stop:
+        command: down
+        arguments: --volumes
+
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.yml
@@ -18,7 +24,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
 
 management:
   endpoints:

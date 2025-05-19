@@ -15,23 +15,26 @@ public final class Sector {
     public static final double TWENTY_FIVE_PERCENT_SURCHARGE_RATE = 1.25;
 
     private final String sectorCode;
-    private final BigDecimal basePrice;
-    private final Integer maxCapacity;
-    private final LocalTime openHour;
-    private final LocalTime closeHour;
-    private final Integer durationLimitMinutes;
-    private final Garage garage;
-    private final List<Spot> spots;
+    private BigDecimal basePrice;
+    private Integer maxCapacity;
+    private LocalTime openHour;
+    private LocalTime closeHour;
+    private Integer durationLimitMinutes;
+    private Garage garage;
+    private List<Spot> spots;
+
+    public Sector(String sectorCode) {
+        this.sectorCode = sectorCode;
+    }
 
     public Sector(String sectorCode, BigDecimal basePrice, Integer maxCapacity, LocalTime openHour,
-                  LocalTime closeHour, Integer durationLimitMinutes, Garage garage, List<Spot> spots) {
+                  LocalTime closeHour, Integer durationLimitMinutes, List<Spot> spots) {
         this.sectorCode = sectorCode;
         this.basePrice = basePrice;
         this.maxCapacity = maxCapacity;
         this.openHour = openHour;
         this.closeHour = closeHour;
         this.durationLimitMinutes = durationLimitMinutes;
-        this.garage = garage;
         this.spots = spots;
     }
 
@@ -85,6 +88,10 @@ public final class Sector {
 
     public Garage getGarage() {
         return garage;
+    }
+
+    public void setGarage(Garage garage) {
+        this.garage = garage;
     }
 
     public List<Spot> getSpots() {

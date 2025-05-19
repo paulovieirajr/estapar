@@ -8,14 +8,10 @@ import java.util.UUID;
 public final class Garage {
 
     private final UUID id;
-    private final List<Sector> sectors;
+    private final List<Sector> sectors = new ArrayList<>();
 
-    public Garage(UUID id, List<Sector> sectors) {
-        if (id == null || sectors == null) {
-            throw new IllegalArgumentException("id and sectors cannot be null");
-        }
+    public Garage(UUID id) {
         this.id = id;
-        this.sectors = new ArrayList<>(sectors);
     }
 
     public UUID getId() {

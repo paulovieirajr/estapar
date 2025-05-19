@@ -1,6 +1,7 @@
 package io.github.paulovieirajr.estapar.adapter.persistence.entity;
 
 import io.github.paulovieirajr.estapar.domain.model.Garage;
+import io.github.paulovieirajr.estapar.domain.model.Sector;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -26,7 +27,13 @@ public class GarageEntity {
     public GarageEntity() {}
 
     public Garage toDomain() {
-        return new Garage(this.id, this.sectors.stream().map(SectorEntity::toDomain).toList());
+        Garage garage = new Garage(this.id);
+        for (SectorEntity sectorEntity : this.sectors) {
+            Sector sector = sectorEntity.toDomain();
+            sector.setGarage(garage);
+            garage.addSector(sector);
+        }
+        return garage;
     }
 
     public GarageEntity fromDomain(Garage garage) {

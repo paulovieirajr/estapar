@@ -32,7 +32,6 @@ public class VehicleEventEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "spot_id",
-            nullable = false,
             foreignKey = @ForeignKey(name = "fk_vehicle_event_spot")
     )
     private SpotEntity spot;

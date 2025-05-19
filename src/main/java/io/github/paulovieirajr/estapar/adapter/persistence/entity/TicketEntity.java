@@ -16,20 +16,20 @@ public class TicketEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "total_price", nullable = false)
+    @Column(name = "total_price")
     private BigDecimal totalPrice;
 
-    @Column(name = "priceRate", nullable = false)
+    @Column(name = "priceRate")
     private BigDecimal priceRate;
 
-    @Column(name = "valid", nullable = false)
+    @Column(name = "valid")
     private Boolean valid;
 
     @CreationTimestamp
     @Column(name = "entry_time", nullable = false, updatable = false)
     private LocalDateTime entryTime;
 
-    @Column(name = "parking_time", nullable = false, updatable = false)
+    @Column(name = "parking_time")
     private LocalDateTime parkingTime;
 
     @Column(name = "exit_time")
@@ -38,7 +38,6 @@ public class TicketEntity {
     @ManyToOne
     @JoinColumn(
             name = "vehicle_id",
-            nullable = false,
             foreignKey = @ForeignKey(name = "fk_ticket_vehicle")
     )
     private VehicleEntity vehicle;
@@ -46,7 +45,6 @@ public class TicketEntity {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(
             name = "spot_id",
-            nullable = false,
             foreignKey = @ForeignKey(name = "fk_ticket_spot")
     )
     private SpotEntity spot;
@@ -83,7 +81,6 @@ public class TicketEntity {
         this.entryTime = ticket.getEntryTime();
         this.parkingTime = ticket.getParkingTime();
         this.exitTime = ticket.getExitTime();
-        this.spot = new SpotEntity().fromDomain(ticket.getSpot());
         return this;
     }
 

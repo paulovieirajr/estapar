@@ -71,6 +71,7 @@ public class VehicleService {
 
         vehicleEventRepository.save(vehicleEvent);
         TicketEntity newTicket = new TicketEntity(savedVehicle);
+        newTicket.setValid(true);
         ticketRepository.save(newTicket);
         return new WebhookEventResponseDto("Vehicle entry registered successfully");
     }
@@ -127,16 +128,16 @@ public class VehicleService {
 
         TicketEntity ticket = findByAValidTicketAndVehicle(vehicle, eventExitDto.getLicensePlate());
         Ticket ticketDomain = ticket.toDomain();
-        ticketDomain.calculateParkingDuration();
-        ticketDomain.getSpot().setOccupied(false);
+        ticketDomain.setExitTime(eventExitDto.getExitTime());
         ticket.fromDomain(ticketDomain);
 
         revenueService.addRevenueWhenSpotIsFree(
                 eventExitDto.getExitTime().toLocalDate(),
-                ticket.getSpot().getSector().getSectorCode(),
-                ticket.getTotalPrice()
+                ticketDomain.getSpot().getSector().getSectorCode(),
+                ticketDomain.calculateTotalPrice()
         );
 
+        ticketRepository.save(ticket);
         return new WebhookEventResponseDto("Vehicle exit registered successfully");
     }
 
@@ -163,7 +164,7 @@ public class VehicleService {
     }
 
     private TicketEntity findByAValidTicketAndVehicle(VehicleEntity vehicle, String eventExitDto) {
-        return ticketRepository.findByValidAndVehicle(true, vehicle)
+        return ticketRepository.findByValidAndVehicle(true, vehicle.getLicensePlate())
                 .orElseThrow(() -> {
                     LOGGER.warn("No valid ticket found for vehicle with license plate: {}", eventExitDto);
                     return new TicketNotFoundException("No valid ticket found for the vehicle.");

@@ -74,7 +74,6 @@ public class SectorEntity {
                 this.openHour,
                 this.closeHour,
                 this.durationLimitMinutes,
-                this.garage.toDomain(),
                 this.spots.stream().map(SpotEntity::toDomain).toList()
         );
     }
