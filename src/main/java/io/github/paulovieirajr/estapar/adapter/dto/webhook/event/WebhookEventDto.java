@@ -21,7 +21,6 @@ import jakarta.validation.constraints.Pattern;
 public sealed class WebhookEventDto permits WebhookEventEntryDto, WebhookEventExitDto, WebhookEventParkedDto {
 
     @NotEmpty
-    @Pattern(regexp = "^[A-Z]{3}\\d{4}$|^[A-Z]{3}\\d{2}[A-Z]\\d{2}$", message = "Invalid license plate format")
     @JsonProperty("license_plate")
     String licensePlate;
 

@@ -1,6 +1,5 @@
 package io.github.paulovieirajr.estapar.adapter.persistence.entity;
 
-import io.github.paulovieirajr.estapar.domain.model.Sector;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -64,35 +63,6 @@ public class SectorEntity {
         this.openHour = openHour;
         this.closeHour = closeHour;
         this.durationLimitMinutes = durationLimitMinutes;
-    }
-
-    public Sector toDomain() {
-        return new Sector(
-                this.sectorCode,
-                this.basePrice,
-                this.maxCapacity,
-                this.openHour,
-                this.closeHour,
-                this.durationLimitMinutes,
-                this.spots.stream().map(SpotEntity::toDomain).toList()
-        );
-    }
-
-    public SectorEntity fromDomain(Sector sector) {
-        this.sectorCode = sector.getSectorCode();
-        this.basePrice = sector.getBasePrice();
-        this.maxCapacity = sector.getMaxCapacity();
-        this.openHour = sector.getOpenHour();
-        this.closeHour = sector.getCloseHour();
-        this.durationLimitMinutes = sector.getDurationLimitMinutes();
-        this.garage = new GarageEntity().fromDomain(sector.getGarage());
-        this.spots = sector.getSpots().stream().map(spot -> {
-            SpotEntity spotEntity = new SpotEntity();
-            spotEntity.fromDomain(spot);
-            spotEntity.setSector(this);
-            return spotEntity;
-        }).toList();
-        return this;
     }
 
     public String getSectorCode() {

@@ -11,7 +11,6 @@ import io.github.paulovieirajr.estapar.adapter.persistence.repository.SpotReposi
 import io.github.paulovieirajr.estapar.adapter.persistence.repository.TicketRepository;
 import io.github.paulovieirajr.estapar.adapter.persistence.repository.VehicleEventRepository;
 import io.github.paulovieirajr.estapar.adapter.persistence.repository.VehicleRepository;
-import io.github.paulovieirajr.estapar.domain.model.Ticket;
 import io.github.paulovieirajr.estapar.service.exception.sector.SectorAlreadyFullException;
 import io.github.paulovieirajr.estapar.service.exception.spot.SpotAlreadyOccupiedException;
 import io.github.paulovieirajr.estapar.service.exception.spot.SpotNotFoundException;
@@ -21,9 +20,9 @@ import io.github.paulovieirajr.estapar.service.exception.vehicle.VehicleAlreadyE
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Service
@@ -50,7 +49,7 @@ public class VehicleService {
     }
 
     public WebhookEventResponseDto registerVehicleEntry(WebhookEventEntryDto eventEntryDto) {
-        LOGGER.info("Registering vehicle entry: {}", eventEntryDto);
+        LOGGER.info("Registering vehicle entry: {}", eventEntryDto.getLicensePlate());
 
         if (sectorService.areAllSectorsTotallyOccupied()) {
             LOGGER.warn("Sectors are totally occupied. Cannot register vehicle entry.");
@@ -76,9 +75,8 @@ public class VehicleService {
         return new WebhookEventResponseDto("Vehicle entry registered successfully");
     }
 
-    @Transactional
     public WebhookEventResponseDto registerVehicleParking(WebhookEventParkedDto eventParkedDto) {
-        LOGGER.info("Registering vehicle parking: {}", eventParkedDto);
+        LOGGER.info("Registering vehicle parking: {}", eventParkedDto.getLicensePlate());
 
         SpotEntity spot = spotRepository.findByLatitudeAndLongitude(
                 eventParkedDto.getLatitude(), eventParkedDto.getLongitude()
@@ -109,13 +107,13 @@ public class VehicleService {
         SectorEntity sector = spot.getSector();
         ticket.setSpot(spot);
         ticket.setParkingTime(LocalDateTime.now());
-        ticket.setPriceRate(BigDecimal.valueOf(sector.toDomain().getDynamicPricingRate()));
+        ticket.setPriceRate(BigDecimal.valueOf(sectorService.getDynamicPricingRate(sector)));
+        ticketRepository.save(ticket);
         return new WebhookEventResponseDto("Vehicle parked successfully");
     }
 
-    @Transactional
     public WebhookEventResponseDto registerVehicleExit(WebhookEventExitDto eventExitDto) {
-        LOGGER.info("Registering vehicle exit: {}", eventExitDto);
+        LOGGER.info("Registering vehicle exit: {}", eventExitDto.getLicensePlate());
 
         VehicleEntity vehicle = findVehicleByLicensePlate(eventExitDto.getLicensePlate());
 
@@ -127,14 +125,14 @@ public class VehicleService {
         vehicleEventRepository.save(vehicleEvent);
 
         TicketEntity ticket = findByAValidTicketAndVehicle(vehicle, eventExitDto.getLicensePlate());
-        Ticket ticketDomain = ticket.toDomain();
-        ticketDomain.setExitTime(eventExitDto.getExitTime());
-        ticket.fromDomain(ticketDomain);
+        ticket.setValid(false);
+        ticket.setExitTime(eventExitDto.getExitTime());
+        ticket.setTotalPrice(calculateTotalPrice(ticket));
 
         revenueService.addRevenueWhenSpotIsFree(
                 eventExitDto.getExitTime().toLocalDate(),
-                ticketDomain.getSpot().getSector().getSectorCode(),
-                ticketDomain.calculateTotalPrice()
+                ticket.getSpot().getSector().getSectorCode(),
+                ticket.getTotalPrice()
         );
 
         ticketRepository.save(ticket);
@@ -149,10 +147,30 @@ public class VehicleService {
 
         return new PlateStatusResponseDto(
                 vehicle.getLicensePlate(),
-                ticket.toDomain().calculateTotalPrice().toString(),
+                calculateTotalPrice(ticket).toString(),
                 ticket.getEntryTime(),
                 ticket.getParkingTime()
         );
+    }
+
+    private BigDecimal calculateTotalPrice(TicketEntity ticket) {
+        if (ticket.getExitTime() != null) {
+            BigDecimal basePrice = ticket.getSpot().getSector().getBasePrice();
+            Duration ticketDuration = calculateParkingDuration(ticket);
+            double hours = Math.ceil((double) ticketDuration.toMinutes() / 60);
+
+            return basePrice
+                    .multiply(BigDecimal.valueOf(hours))
+                    .multiply(ticket.getPriceRate());
+        }
+        return BigDecimal.ZERO;
+    }
+
+    private Duration calculateParkingDuration(TicketEntity ticket) {
+        if (ticket.getExitTime() != null) {
+            return Duration.between(ticket.getEntryTime(), ticket.getExitTime());
+        }
+        return Duration.ZERO;
     }
 
     private VehicleEntity findVehicleByLicensePlate(String eventExitDto) {

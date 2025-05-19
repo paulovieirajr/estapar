@@ -1,6 +1,5 @@
 package io.github.paulovieirajr.estapar.adapter.persistence.entity;
 
-import io.github.paulovieirajr.estapar.domain.model.Ticket;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -58,30 +57,6 @@ public class TicketEntity {
 
     public TicketEntity(VehicleEntity vehicle) {
         this.vehicle = vehicle;
-    }
-
-    public Ticket toDomain() {
-        return new Ticket(
-                this.id,
-                this.totalPrice,
-                this.priceRate,
-                this.valid,
-                this.spot.toDomain(),
-                this.entryTime,
-                this.parkingTime,
-                this.exitTime
-        );
-    }
-
-    public TicketEntity fromDomain(Ticket ticket) {
-        this.id = ticket.getId();
-        this.totalPrice = ticket.getTotalPrice();
-        this.priceRate = ticket.getPriceRate();
-        this.valid = ticket.isValid();
-        this.entryTime = ticket.getEntryTime();
-        this.parkingTime = ticket.getParkingTime();
-        this.exitTime = ticket.getExitTime();
-        return this;
     }
 
     public UUID getId() {

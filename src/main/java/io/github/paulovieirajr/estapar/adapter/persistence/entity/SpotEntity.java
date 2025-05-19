@@ -1,7 +1,5 @@
 package io.github.paulovieirajr.estapar.adapter.persistence.entity;
 
-import io.github.paulovieirajr.estapar.domain.model.Sector;
-import io.github.paulovieirajr.estapar.domain.model.Spot;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -54,25 +52,6 @@ public class SpotEntity {
         this.latitude = latitude;
         this.longitude = longitude;
         this.occupied = occupied;
-    }
-
-    public Spot toDomain() {
-        Sector sectorRef = new Sector(sector.getSectorCode());
-        return new Spot(
-                this.id,
-                this.latitude,
-                this.longitude,
-                sectorRef,
-                this.occupied
-        );
-    }
-
-    public SpotEntity fromDomain(Spot spot) {
-        this.id = spot.getId();
-        this.latitude = spot.getLatitude();
-        this.longitude = spot.getLongitude();
-        this.occupied = spot.isOccupied();
-        return this;
     }
 
     public Integer getId() {

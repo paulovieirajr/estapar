@@ -5,8 +5,6 @@ import io.github.paulovieirajr.estapar.adapter.persistence.entity.RevenueEntity;
 import io.github.paulovieirajr.estapar.adapter.persistence.entity.SectorEntity;
 import io.github.paulovieirajr.estapar.adapter.persistence.repository.RevenueRepository;
 import io.github.paulovieirajr.estapar.adapter.persistence.repository.SectorRepository;
-import io.github.paulovieirajr.estapar.domain.model.Revenue;
-import io.github.paulovieirajr.estapar.service.exception.revenue.RevenueAlreadyExistsException;
 import io.github.paulovieirajr.estapar.service.exception.sector.SectorNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,21 +46,31 @@ public class RevenueService {
         SectorEntity sector = recoverSectorByCode(sectorCode);
         Optional<RevenueEntity> recoveredRevenue = revenueRepository.findByDateAndSector(exitDate, sector);
 
-        if (recoveredRevenue.isEmpty()) {
-            LOGGER.info("No revenue found. Creating a new one.");
-            RevenueEntity newRevenue = new RevenueEntity(exitDate, amount, sector);
-            revenueRepository.save(newRevenue);
-            return;
-        }
+        recoveredRevenue.ifPresentOrElse(
+                revenueEntity -> {
+                    LOGGER.info("Revenue already exists for date: {}, sector: {}. Updating revenue.", exitDate, sectorCode);
+                    updateExistingRevenue(recoveredRevenue, amount);
+                },
+                () -> {
+                    LOGGER.info("No revenue found for date: {}, sector: {}. Creating new revenue.", exitDate, sectorCode);
+                    createNewRevenue(exitDate, sector, amount);
+                }
+        );
+    }
 
-        LOGGER.info("Revenue found. Updating existing revenue.");
-        RevenueEntity existingEntity = recoveredRevenue.get();
+    private void createNewRevenue(LocalDate exitDate, SectorEntity sector, BigDecimal amount) {
+        RevenueEntity newRevenue = new RevenueEntity(exitDate, amount, sector);
+        revenueRepository.save(newRevenue);
+    }
 
-        Revenue revenueDomain = existingEntity.toDomain();
-        revenueDomain.addRevenueAmount(amount);
+    private void updateExistingRevenue(Optional<RevenueEntity> recoveredRevenue, BigDecimal amount) {
+        RevenueEntity revenueEntity = recoveredRevenue.get();
+        addRevenueAmount(revenueEntity, amount);
+        revenueRepository.save(revenueEntity);
+    }
 
-        RevenueEntity updatedEntity = existingEntity.fromDomain(revenueDomain);
-        revenueRepository.save(updatedEntity);
+    public void addRevenueAmount(RevenueEntity revenue, BigDecimal amount) {
+        revenue.setAmount(revenue.getAmount().add(amount));
     }
 
     private SectorEntity recoverSectorByCode(String sectorCode) {

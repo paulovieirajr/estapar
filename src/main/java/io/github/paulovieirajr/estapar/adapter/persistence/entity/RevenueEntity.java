@@ -1,6 +1,5 @@
 package io.github.paulovieirajr.estapar.adapter.persistence.entity;
 
-import io.github.paulovieirajr.estapar.domain.model.Revenue;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -33,7 +32,7 @@ public class RevenueEntity {
     @JoinColumn(
             name = "sector_code",
             nullable = false,
-            foreignKey = @ForeignKey(name = "fk_revenue_sector" )
+            foreignKey = @ForeignKey(name = "fk_revenue_sector")
     )
     private SectorEntity sector;
 
@@ -52,23 +51,6 @@ public class RevenueEntity {
         this.date = date;
         this.amount = amount;
         this.sector = sector;
-    }
-
-    public Revenue toDomain() {
-        return new Revenue(
-                this.id,
-                this.date,
-                this.amount,
-                this.currencyCode
-        );
-    }
-
-    public RevenueEntity fromDomain(Revenue revenue) {
-        this.id = revenue.getId();
-        this.date = revenue.getDate();
-        this.amount = revenue.getAmount();
-        this.currencyCode = revenue.getCurrencyCode();
-        return this;
     }
 
     public UUID getId() {
