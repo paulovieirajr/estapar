@@ -6,3 +6,19 @@ databaseChangeLog:
         - sqlFile:
             path: db/sql/1-create-garage-sector-spot-tables.sql
             relativeToChangelogFile: false
+
+  - changeSet:
+      id: 2
+      author: paulo vieira
+      changes:
+        - sqlFile:
+            path: db/sql/2-create-vehicle-ticket-tables.sql
+            relativeToChangelogFile: false
+
+  - changeSet:
+      id: 3
+      author: paulo vieira
+      changes:
+        - sqlFile:
+            path: db/sql/3-create-revenue-vehicleevent-tables.sql
+            relativeToChangelogFile: false
