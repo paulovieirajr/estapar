@@ -17,14 +17,14 @@ ALTER TABLE vehicle
 CREATE TABLE ticket
 (
     id           BINARY(16) NOT NULL,
-    total_price  DECIMAL    NOT NULL,
-    price_rate   DECIMAL    NOT NULL,
-    valid        BIT(1)     NOT NULL,
+    total_price  DECIMAL    NULL,
+    price_rate   DECIMAL    NULL,
+    valid        BIT(1)     NULL,
     entry_time   datetime   NOT NULL,
-    parking_time datetime   NOT NULL,
+    parking_time datetime   NULL,
     exit_time    datetime   NULL,
-    vehicle_id   BINARY(16) NOT NULL,
-    spot_id      INT        NOT NULL,
+    vehicle_id   BINARY(16) NULL,
+    spot_id      INT        NULL,
     created_at   datetime   NOT NULL,
     CONSTRAINT pk_ticket PRIMARY KEY (id)
 );

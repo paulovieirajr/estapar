@@ -23,7 +23,7 @@ CREATE TABLE vehicle_event
     event_date datetime     NOT NULL,
     event_type VARCHAR(255) NOT NULL,
     vehicle_id BINARY(16)   NOT NULL,
-    spot_id    INT          NOT NULL,
+    spot_id    INT          NULL,
     created_at datetime     NOT NULL,
     CONSTRAINT pk_vehicle_event PRIMARY KEY (id)
 );
