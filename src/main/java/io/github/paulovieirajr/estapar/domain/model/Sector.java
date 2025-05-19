@@ -59,6 +59,10 @@ public final class Sector {
         return (double) occupiedSpots / maxCapacity;
     }
 
+    public boolean isTotallyOccupied() {
+        return getOccupancyRate() >= 1.0;
+    }
+
     public String getSectorCode() {
         return sectorCode;
     }

@@ -6,7 +6,7 @@ public final class Spot {
     private final Double latitude;
     private final Double longitude;
     private final Sector sector;
-    private final boolean occupied;
+    private boolean occupied;
 
     public Spot(Integer id, Double latitude, Double longitude, Sector sector, boolean occupied) {
         this.id = id;
@@ -38,5 +38,9 @@ public final class Spot {
 
     public boolean isOccupied() {
         return occupied;
+    }
+
+    public void setOccupied(boolean occupied) {
+        this.occupied = occupied;
     }
 }
