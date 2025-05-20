@@ -5,6 +5,7 @@ import io.github.paulovieirajr.estapar.adapter.persistence.entity.RevenueEntity;
 import io.github.paulovieirajr.estapar.adapter.persistence.entity.SectorEntity;
 import io.github.paulovieirajr.estapar.adapter.persistence.repository.RevenueRepository;
 import io.github.paulovieirajr.estapar.adapter.persistence.repository.SectorRepository;
+import io.github.paulovieirajr.estapar.service.exception.revenue.RevenueNotFoundException;
 import io.github.paulovieirajr.estapar.service.exception.sector.SectorNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,10 +58,12 @@ public class RevenueService {
     }
 
     private void updateExistingRevenue(Optional<RevenueEntity> recoveredRevenue, BigDecimal amount) {
-        RevenueEntity revenueEntity = recoveredRevenue.get();
-        addRevenueAmount(revenueEntity, amount);
-        revenueRepository.save(revenueEntity);
-    }
+           RevenueEntity revenueEntity = recoveredRevenue.orElseThrow(() -> new RevenueNotFoundException(
+                   "Revenue not found for the given date and sector")
+           );
+           addRevenueAmount(revenueEntity, amount);
+           revenueRepository.save(revenueEntity);
+       }
 
     public void addRevenueAmount(RevenueEntity revenue, BigDecimal amount) {
         revenue.setAmount(revenue.getAmount().add(amount));
