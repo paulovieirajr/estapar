@@ -57,6 +57,54 @@ public class VehicleEventEntity {
         this.spot = spot;
     }
 
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public LocalDateTime getEventDate() {
+        return eventDate;
+    }
+
+    public void setEventDate(LocalDateTime eventDate) {
+        this.eventDate = eventDate;
+    }
+
+    public String getEventType() {
+        return eventType;
+    }
+
+    public void setEventType(String eventType) {
+        this.eventType = eventType;
+    }
+
+    public VehicleEntity getVehicle() {
+        return vehicle;
+    }
+
+    public void setVehicle(VehicleEntity vehicle) {
+        this.vehicle = vehicle;
+    }
+
+    public SpotEntity getSpot() {
+        return spot;
+    }
+
+    public void setSpot(SpotEntity spot) {
+        this.spot = spot;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof VehicleEventEntity that)) return false;

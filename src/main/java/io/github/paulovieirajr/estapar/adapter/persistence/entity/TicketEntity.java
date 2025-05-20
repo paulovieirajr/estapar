@@ -84,7 +84,7 @@ public class TicketEntity {
         this.priceRate = rate;
     }
 
-    public Boolean getValid() {
+    public Boolean isValid() {
         return valid;
     }
 
@@ -94,6 +94,10 @@ public class TicketEntity {
 
     public LocalDateTime getEntryTime() {
         return entryTime;
+    }
+
+    public void setEntryTime(LocalDateTime entryTime) {
+        this.entryTime = entryTime;
     }
 
     public LocalDateTime getParkingTime() {

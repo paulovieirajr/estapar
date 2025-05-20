@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -23,6 +24,7 @@ import org.springframework.web.client.RestClient;
 import java.util.List;
 
 @Component
+@Profile("!test")
 public class EstaparGarageSimulatorInitializer implements ApplicationRunner {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EstaparGarageSimulatorInitializer.class);
