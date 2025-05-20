@@ -1,4 +1,4 @@
-package io.github.paulovieirajr.estapar.service;
+package io.github.paulovieirajr.estapar.service.revenue;
 
 import io.github.paulovieirajr.estapar.adapter.dto.revenue.RevenueRequestDto;
 import io.github.paulovieirajr.estapar.adapter.persistence.entity.RevenueEntity;

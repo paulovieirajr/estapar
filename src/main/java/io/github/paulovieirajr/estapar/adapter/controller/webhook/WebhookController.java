@@ -1,7 +1,7 @@
 package io.github.paulovieirajr.estapar.adapter.controller.webhook;
 
 import io.github.paulovieirajr.estapar.adapter.dto.webhook.event.*;
-import io.github.paulovieirajr.estapar.service.VehicleService;
+import io.github.paulovieirajr.estapar.service.vehicle.VehicleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/webhook")
-public class WebhookController implements WebhookSwagger{
+public class WebhookController implements WebhookSwagger {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WebhookController.class);
 

@@ -1,7 +1,7 @@
 package io.github.paulovieirajr.estapar.adapter.controller.webhook;
 
-import io.github.paulovieirajr.estapar.adapter.dto.webhook.event.WebhookEventResponseDto;
 import io.github.paulovieirajr.estapar.adapter.dto.webhook.event.WebhookEventDto;
+import io.github.paulovieirajr.estapar.adapter.dto.webhook.event.WebhookEventResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;

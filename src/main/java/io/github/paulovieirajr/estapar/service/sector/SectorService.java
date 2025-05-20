@@ -1,4 +1,4 @@
-package io.github.paulovieirajr.estapar.service;
+package io.github.paulovieirajr.estapar.service.sector;
 
 import io.github.paulovieirajr.estapar.adapter.persistence.entity.SectorEntity;
 import io.github.paulovieirajr.estapar.adapter.persistence.entity.SpotEntity;
@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
+import java.util.List;
 
 @Service
 public class SectorService {
@@ -30,24 +31,25 @@ public class SectorService {
         this.sectorRepository = sectorRepository;
     }
 
-    public double getTotalSectorOccupancyRate(String sectorCode) {
-        LOGGER.info("Calculating total occupancy rate for sector: {}", sectorCode);
-        return sectorRepository.findBySectorCode(sectorCode)
-                .map(this::getOccupancyRate)
-                .orElseThrow(() -> new SectorNotFoundException("Sector not found with code: " + sectorCode));
-    }
-
     public boolean isSectorTotallyOccupied(String sectorCode) {
         LOGGER.info("Checking if sector is totally occupied: {}", sectorCode);
         return sectorRepository.findBySectorCode(sectorCode)
-                .map(this::isTotallyOccupied)
+                .map(this::isSectorTotallyOccupied)
                 .orElseThrow(() -> new SectorNotFoundException("Sector not found with code: " + sectorCode));
     }
 
-    public boolean areAllSectorsTotallyOccupied() {
+    public boolean areAllSectorsFullOrClosed(LocalTime entryTime) {
         LOGGER.info("Checking if all sectors are totally occupied");
-        return sectorRepository.findAll().stream()
-                .allMatch(this::isTotallyOccupied);
+        List<SectorEntity> sectors = sectorRepository.findAll();
+
+        boolean existsAvailableSector = sectors.stream()
+                .anyMatch(sector -> {
+                    boolean isOpen = canEntry(entryTime, sector);
+                    boolean hasVacancy = !isSectorTotallyOccupied(sector.getSectorCode());
+                    return isOpen && hasVacancy;
+                });
+
+        return !existsAvailableSector;
     }
 
     public boolean canEntry(LocalTime entryTime, SectorEntity sector) {
@@ -70,7 +72,7 @@ public class SectorService {
         return (double) occupiedSpots / sector.getMaxCapacity();
     }
 
-    private boolean isTotallyOccupied(SectorEntity sector) {
+    private boolean isSectorTotallyOccupied(SectorEntity sector) {
         return getOccupancyRate(sector) >= MAXIMUM_OCCUPANCY_RATE;
     }
 }

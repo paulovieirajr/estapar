@@ -1,7 +1,7 @@
-package io.github.paulovieirajr.estapar.service;
+package io.github.paulovieirajr.estapar.service.vehicle;
 
-import io.github.paulovieirajr.estapar.adapter.dto.vehicle.PlateStatusRequestDto;
-import io.github.paulovieirajr.estapar.adapter.dto.vehicle.PlateStatusResponseDto;
+import io.github.paulovieirajr.estapar.adapter.dto.vehicle.LicensePlateRequestDto;
+import io.github.paulovieirajr.estapar.adapter.dto.vehicle.LicensePlateResponseDto;
 import io.github.paulovieirajr.estapar.adapter.dto.webhook.event.WebhookEventEntryDto;
 import io.github.paulovieirajr.estapar.adapter.dto.webhook.event.WebhookEventExitDto;
 import io.github.paulovieirajr.estapar.adapter.dto.webhook.event.WebhookEventParkedDto;
@@ -17,6 +17,8 @@ import io.github.paulovieirajr.estapar.service.exception.spot.SpotNotFoundExcept
 import io.github.paulovieirajr.estapar.service.exception.ticket.TicketNotFoundException;
 import io.github.paulovieirajr.estapar.service.exception.vehicle.VechicleNotFoundException;
 import io.github.paulovieirajr.estapar.service.exception.vehicle.VehicleAlreadyExistsException;
+import io.github.paulovieirajr.estapar.service.revenue.RevenueService;
+import io.github.paulovieirajr.estapar.service.sector.SectorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class VehicleService {
@@ -51,9 +54,9 @@ public class VehicleService {
     public WebhookEventResponseDto registerVehicleEntry(WebhookEventEntryDto eventEntryDto) {
         LOGGER.info("Registering vehicle entry: {}", eventEntryDto.getLicensePlate());
 
-        if (sectorService.areAllSectorsTotallyOccupied()) {
-            LOGGER.warn("Sectors are totally occupied. Cannot register vehicle entry.");
-            throw new SectorAlreadyFullException("Cannot register vehicle entry. All sectors are full.");
+        if (sectorService.areAllSectorsFullOrClosed(eventEntryDto.getEntryTime().toLocalTime())) {
+            LOGGER.warn("Sectors are totally occupied or closed.");
+            throw new SectorAlreadyFullException("All sectors are full or closed.");
         }
 
         vehicleRepository.findByLicensePlate(eventEntryDto.getLicensePlate())
@@ -139,24 +142,29 @@ public class VehicleService {
         return new WebhookEventResponseDto("Vehicle exit registered successfully");
     }
 
-    public PlateStatusResponseDto getPlateStatus(PlateStatusRequestDto plateStatusRequestDto) {
-        LOGGER.info("Getting vehicle status for license plate: {}", plateStatusRequestDto.licensePlate());
+    public Optional<LicensePlateResponseDto> searchLicensePlate(LicensePlateRequestDto licensePlateRequestDto) {
+        LOGGER.info("Getting vehicle status for license plate: {}", licensePlateRequestDto.licensePlate());
 
-        VehicleEntity vehicle = findVehicleByLicensePlate(plateStatusRequestDto.licensePlate());
-        TicketEntity ticket = findByAValidTicketAndVehicle(vehicle, plateStatusRequestDto.licensePlate());
-
-        return new PlateStatusResponseDto(
-                vehicle.getLicensePlate(),
-                calculateTotalPrice(ticket).toString(),
-                ticket.getEntryTime(),
-                ticket.getParkingTime()
-        );
+        String plate = licensePlateRequestDto.licensePlate();
+        return vehicleRepository.findByLicensePlate(plate)
+                .flatMap(vehicle -> ticketRepository.findByValidAndVehicle(true, plate)
+                        .map(ticket -> new LicensePlateResponseDto(
+                                vehicle.getLicensePlate(),
+                                calculatePartialPrice(ticket).toString(),
+                                ticket.getEntryTime(),
+                                ticket.getParkingTime()
+                        ))
+                )
+                .or(() -> {
+                    LOGGER.warn("Vehicle or ticket not found for license plate {}", plate);
+                    return Optional.empty();
+                });
     }
 
-    private BigDecimal calculateTotalPrice(TicketEntity ticket) {
-        if (ticket.getExitTime() != null) {
+    private BigDecimal calculatePartialPrice(TicketEntity ticket) {
+        if (ticket.getParkingTime() != null) {
             BigDecimal basePrice = ticket.getSpot().getSector().getBasePrice();
-            Duration ticketDuration = calculateParkingDuration(ticket);
+            Duration ticketDuration = Duration.between(ticket.getParkingTime(), LocalDateTime.now());
             double hours = Math.ceil((double) ticketDuration.toMinutes() / 60);
 
             return basePrice
@@ -166,11 +174,17 @@ public class VehicleService {
         return BigDecimal.ZERO;
     }
 
-    private Duration calculateParkingDuration(TicketEntity ticket) {
-        if (ticket.getExitTime() != null) {
-            return Duration.between(ticket.getEntryTime(), ticket.getExitTime());
+    private BigDecimal calculateTotalPrice(TicketEntity ticket) {
+        if (ticket.getExitTime() != null || ticket.getParkingTime() != null) {
+            BigDecimal basePrice = ticket.getSpot().getSector().getBasePrice();
+            Duration ticketDuration = Duration.between(ticket.getEntryTime(), ticket.getExitTime());
+            double hours = Math.ceil((double) ticketDuration.toMinutes() / 60);
+
+            return basePrice
+                    .multiply(BigDecimal.valueOf(hours))
+                    .multiply(ticket.getPriceRate());
         }
-        return Duration.ZERO;
+        return BigDecimal.ZERO;
     }
 
     private VehicleEntity findVehicleByLicensePlate(String eventExitDto) {

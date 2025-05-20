@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
 
-public record PlateStatusResponseDto(
+public record LicensePlateResponseDto(
         @JsonProperty("license_plate")
         String licensePlate,
 
