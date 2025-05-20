@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -54,5 +55,16 @@ public class VehicleEventEntity {
         this.eventDate = eventDate;
         this.vehicle = vehicle;
         this.spot = spot;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof VehicleEventEntity that)) return false;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

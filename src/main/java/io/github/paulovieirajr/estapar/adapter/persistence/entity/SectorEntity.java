@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "sector")
@@ -152,5 +153,16 @@ public class SectorEntity {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof SectorEntity that)) return false;
+        return Objects.equals(getSectorCode(), that.getSectorCode());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getSectorCode());
     }
 }

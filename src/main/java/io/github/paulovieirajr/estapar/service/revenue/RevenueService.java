@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,12 +31,6 @@ public class RevenueService {
         LOGGER.info("Fetching revenue by sector code");
         SectorEntity sector = recoverSectorByCode(revenueRequestDto.sectorCode());
         return revenueRepository.findByDateAndSector(revenueRequestDto.date(), sector);
-    }
-
-    public List<RevenueEntity> fetchRevenueBySectorBetweenDates(LocalDate startDate, LocalDate endDate, String sectorCode) {
-        LOGGER.info("Fetching revenue by sector code between dates");
-        SectorEntity sector = recoverSectorByCode(sectorCode);
-        return revenueRepository.findByDateBetweenAndSector(startDate, endDate, sector);
     }
 
     public void addRevenueWhenSpotIsFree(LocalDate exitDate, String sectorCode, BigDecimal amount) {
