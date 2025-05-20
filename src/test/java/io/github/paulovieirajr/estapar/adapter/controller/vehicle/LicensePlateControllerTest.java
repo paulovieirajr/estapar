@@ -27,11 +27,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(LicensePlateController.class)
 class LicensePlateControllerTest {
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
     private static final String LICENSE_PLATE_REGISTERED = "ABC1234";
     private static final String LICENSE_PLATE_UNREGISTERED = "XYZ9876";
-    private static final LocalDateTime PARKING_TIME = LocalDateTime.now().minusMinutes(30).truncatedTo(ChronoUnit.MILLIS);
-    private static final LocalDateTime ENTRY_TIME = PARKING_TIME.minusMinutes(30).truncatedTo(ChronoUnit.MILLIS);
+    private static final LocalDateTime PARKING_TIME = LocalDateTime.of(2025, 5, 20, 10, 30, 10);
+    private static final LocalDateTime ENTRY_TIME = PARKING_TIME.plusHours(1).truncatedTo(ChronoUnit.SECONDS);
     private static final String PRICE_UNTIL_NOW = "10.50";
 
     @Autowired

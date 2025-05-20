@@ -1,3 +1,6 @@
+[![codecov](https://codecov.io/gh/paulovieirajr/estapar/branch/main/graph/badge.svg)](https://codecov.io/gh/paulovieirajr/estapar)
+[![Build Status](https://travis-ci.com/paulovieirajr/estapar.svg?branch=main)](https://travis-ci.com/paulovieirajr/estapar)
+
 # Teste Desenvolvedor Java/Kotlin Backend
 
 Este é o teste para Desevolvedor Java/Kotlin da Estapar.
