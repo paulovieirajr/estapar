@@ -4,12 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.paulovieirajr.estapar.adapter.dto.simulator.EstaparDataSimulatorDto;
 import io.github.paulovieirajr.estapar.adapter.dto.simulator.SectorDto;
-import io.github.paulovieirajr.estapar.adapter.persistence.repository.GarageRepository;
-import io.github.paulovieirajr.estapar.adapter.persistence.repository.SectorRepository;
-import io.github.paulovieirajr.estapar.adapter.persistence.repository.SpotRepository;
 import io.github.paulovieirajr.estapar.adapter.persistence.entity.GarageEntity;
 import io.github.paulovieirajr.estapar.adapter.persistence.entity.SectorEntity;
 import io.github.paulovieirajr.estapar.adapter.persistence.entity.SpotEntity;
+import io.github.paulovieirajr.estapar.adapter.persistence.repository.GarageRepository;
+import io.github.paulovieirajr.estapar.adapter.persistence.repository.SectorRepository;
+import io.github.paulovieirajr.estapar.adapter.persistence.repository.SpotRepository;
+import io.github.paulovieirajr.estapar.service.exception.sector.SectorNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -88,7 +89,7 @@ public class EstaparGarageSimulatorInitializer implements ApplicationRunner {
             SectorEntity sectorEntity = sectors.stream()
                     .filter(sector -> sector.getSectorCode().equals(dto.sectorCode()))
                     .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("Sector not found for spot: " + dto.id()));
+                    .orElseThrow(() -> new SectorNotFoundException("Sector not found for spot: " + dto.id()));
             sectorEntity.addSpot(spot);
             return spot;
         }).toList();
@@ -97,7 +98,7 @@ public class EstaparGarageSimulatorInitializer implements ApplicationRunner {
             SectorEntity sectorEntity = sectors.stream()
                     .filter(sector -> sector.getSectorCode().equals(spot.getSector().getSectorCode()))
                     .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("Sector not found for spot: " + spot.getId()));
+                    .orElseThrow(() -> new SectorNotFoundException("Sector not found for spot: " + spot.getId()));
             sectorEntity.addSpot(spot);
         }
         return spots;
