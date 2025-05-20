@@ -26,18 +26,20 @@ public class WebhookController implements WebhookSwagger {
         switch (event.getEventType()) {
             case ENTRY -> {
                 LOGGER.info("Processing entry event for license plate: {}", event.getLicensePlate());
-                vehicleService.registerVehicleEntry((WebhookEventEntryDto) event);
+                return ResponseEntity.ok(vehicleService.registerVehicleEntry((WebhookEventEntryDto) event));
             }
             case PARKED -> {
                 LOGGER.info("Processing parked event for license plate: {}", event.getLicensePlate());
-                vehicleService.registerVehicleParking((WebhookEventParkedDto) event);
+                return ResponseEntity.ok(vehicleService.registerVehicleParking((WebhookEventParkedDto) event));
             }
             case EXIT -> {
                 LOGGER.info("Processing exit event for license plate: {}", event.getLicensePlate());
-                vehicleService.registerVehicleExit((WebhookEventExitDto) event);
+                return ResponseEntity.ok(vehicleService.registerVehicleExit((WebhookEventExitDto) event));
             }
             default -> LOGGER.warn("Unprocessable event type: {}", event.getEventType());
         }
-        return ResponseEntity.ok(new WebhookEventResponseDto("Webhook event processed successfully"));
+        return ResponseEntity.badRequest().body(
+                new WebhookEventResponseDto("Unprocessable event type: " + event.getEventType())
+        );
     }
 }
