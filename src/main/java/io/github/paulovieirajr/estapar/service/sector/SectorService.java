@@ -32,7 +32,6 @@ public class SectorService {
     }
 
     public boolean isSectorTotallyOccupied(String sectorCode) {
-        LOGGER.info("Checking if sector is totally occupied: {}", sectorCode);
         return sectorRepository.findBySectorCode(sectorCode)
                 .map(this::isSectorTotallyOccupied)
                 .orElseThrow(() -> new SectorNotFoundException("Sector not found with code: " + sectorCode));

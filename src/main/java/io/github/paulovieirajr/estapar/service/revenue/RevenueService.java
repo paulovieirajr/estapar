@@ -35,18 +35,18 @@ public class RevenueService {
     }
 
     public void addRevenueWhenSpotIsFree(LocalDate exitDate, String sectorCode, BigDecimal amount) {
-        LOGGER.info("Adding a new revenue when spot is free for date: {}, sector: {}, amount: {}", exitDate, sectorCode, amount);
+        LOGGER.info("Adding a new revenue when spot is free for date: {}", exitDate);
 
         SectorEntity sector = recoverSectorByCode(sectorCode);
         Optional<RevenueEntity> recoveredRevenue = revenueRepository.findByDateAndSector(exitDate, sector);
 
         recoveredRevenue.ifPresentOrElse(
                 revenueEntity -> {
-                    LOGGER.info("Revenue already exists for date: {}, sector: {}. Updating revenue.", exitDate, sectorCode);
+                    LOGGER.info("Revenue already exists for date: {}. Updating revenue.", exitDate);
                     updateExistingRevenue(recoveredRevenue, amount);
                 },
                 () -> {
-                    LOGGER.info("No revenue found for date: {}, sector: {}. Creating new revenue.", exitDate, sectorCode);
+                    LOGGER.info("No revenue found for date: {}. Creating new revenue.", exitDate);
                     createNewRevenue(exitDate, sector, amount);
                 }
         );

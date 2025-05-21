@@ -33,7 +33,7 @@ public class RevenueController implements RevenueSwagger {
 
         return revenueService.fetchRevenueBySector(revenueRequestDto)
                 .map(revenue -> {
-                    LOGGER.info("Revenue found: {}", revenue);
+                    LOGGER.info("Revenue found for date: {}", revenueRequestDto.date());
                     return ResponseEntity.ok(new RevenueResponseDto(
                             revenue.getAmount(),
                             revenue.getCurrencyCode(),
