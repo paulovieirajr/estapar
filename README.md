@@ -1,5 +1,5 @@
 [![CI](https://github.com/paulovieirajr/estapar/actions/workflows/build.yml/badge.svg)](https://github.com/paulovieirajr/estapar/actions/workflows/build.yml)
-[![codecov](https://codecov.io/gh/paulovieirajr/estapar/branch/main/graph/badge.svg)](https://codecov.io/gh/paulovieirajr/estapar)
+[![codecov](https://codecov.io/gh/paulovieirajr/estapar-challenge/branch/main/graph/badge.svg)](https://codecov.io/gh/paulovieirajr/estapar-challenge)
 ![Java](https://img.shields.io/badge/Java-21-green?style=plastic&logo=java)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.4.5-green?logo=springboot&logoColor=%23E4D00A)
 ![Spring Data JPA](https://img.shields.io/badge/Spring_Data_JPA-gray?logo=spring&logoColor=%23E4D00A)
