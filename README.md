@@ -1,7 +1,151 @@
+[![CI](https://github.com/paulovieirajr/estapar/actions/workflows/build.yml/badge.svg)](https://github.com/paulovieirajr/estapar/actions/workflows/build.yml)
 [![codecov](https://codecov.io/gh/paulovieirajr/estapar/branch/main/graph/badge.svg)](https://codecov.io/gh/paulovieirajr/estapar)
-[![Build Status](https://travis-ci.com/paulovieirajr/estapar.svg?branch=main)](https://travis-ci.com/paulovieirajr/estapar)
+![Java](https://img.shields.io/badge/Java-21-green?style=plastic&logo=java)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.4.5-green?logo=springboot&logoColor=%23E4D00A)
+![Spring Data JPA](https://img.shields.io/badge/Spring_Data_JPA-gray?logo=spring&logoColor=%23E4D00A)
+![JUnit](https://img.shields.io/badge/JUnit-5-green?style=plastic&)
+![Maven](https://img.shields.io/badge/Apache_Maven-red?logo=apachemaven&logoColor=%23FFF)
+![MySQL](https://shields.io/badge/MySQL-lightgrey?logo=mysql&style=plastic&logoColor=white&labelColor=blue)
+![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=fff)
+![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?logo=github-actions&logoColor=white)
 
-# Teste Desenvolvedor Java/Kotlin Backend
+# Desafio Estapar Estacionamentos/CTC
+
+Este é um desafio proposto para desenvolver um sistema de gestão de estacionamentos onde a aplicação vai receber requests via webhook através de um container disponibilizado pela Estapar. A instrução fornecida para o desafio
+vai ficar após a estrutura de diretórios que montei para esse desafio.
+
+A aplicação contém uma classe "starter" que faz a leitura do json no container e popular a base de dados.
+
+Para rodar a aplicação localmente, primeiro execute o container fornecido pela Estapar.
+
+⚠️ Eu gostaria de ter incluído no docker-compose.yml, mas tive alguns problemas para executá-lo em modo host como na descrição do desafio. Apenas com o seguinte comando é que consegui:
+
+```bash
+docker run -d --name estapar_simulator -p 3000:3000 --add-host=localhost:host-gateway cfontes0estapar/garage-sim:1.0.0
+```
+Pelo que pesquisei, acredito que no Linux o comando fornecido na descrição funcione.
+
+
+basta fazer o clone do projeto e executá-la preferencialmente no Intellij, ou executar o comando na raiz do projeto:
+
+> Windows(CMD)
+```bash
+mvnw spring-boot:run
+```
+
+> Linux/MacOS
+```bash
+./mvnw spring-boot:run
+```
+
+Como a aplicação já conta com a extensão do Docker Compose, ao rodar a aplicação, o container do MySQL será inicializado e populado. Por padrão, configurei a remoção do volume do container ao parar a aplicação.
+
+Utilizei Java 21 com Spring Boot 3, um container do MySQL via docker-compose.yml, Spring Boot Actuator, Spring Data JPA, Liquibase. Para testes utilizei o JUnit5, AssertJ, Mockito, features do Spring para testes e H2 para substituir o MySQL em testes de repositório.
+
+A aplicação contém testes na camada de controller, serviço e repositório.
+
+Também criei uma action que verifica build, testes, coverage e vulnerabilidade das dependências.
+
+A seguinte estrutura foi utilizada:
+
+```
+├── src
+│   ├── main
+│   │   ├── java
+│   │   │   └── io
+│   │   │       └── github
+│   │   │           └── paulovieirajr
+│   │   │               └── estapar
+│   │   │                   ├── EstaparApplication.java
+│   │   │                   ├── adapter
+│   │   │                   │   ├── controller
+│   │   │                   │   │   ├── revenue
+│   │   │                   │   │   │   ├── RevenueController.java
+│   │   │                   │   │   │   └── RevenueSwagger.java
+│   │   │                   │   │   ├── spot
+│   │   │                   │   │   │   ├── SpotStatusController.java
+│   │   │                   │   │   │   └── SpotSwagger.java
+│   │   │                   │   │   ├── vehicle
+│   │   │                   │   │   │   ├── LicensePlateController.java
+│   │   │                   │   │   │   └── LicensePlateSwagger.java
+│   │   │                   │   │   └── webhook
+│   │   │                   │   │       ├── WebhookController.java
+│   │   │                   │   │       └── WebhookSwagger.java
+│   │   │                   │   ├── dto
+│   │   │                   │   │   ├── revenue
+│   │   │                   │   │   │   ├── RevenueRequestDto.java
+│   │   │                   │   │   │   └── RevenueResponseDto.java
+│   │   │                   │   │   ├── simulator
+│   │   │                   │   │   │   ├── EstaparDataSimulatorDto.java
+│   │   │                   │   │   │   ├── SectorDto.java
+│   │   │                   │   │   │   └── SpotDto.java
+│   │   │                   │   │   ├── spot
+│   │   │                   │   │   │   ├── SpotStatusRequestDto.java
+│   │   │                   │   │   │   └── SpotStatusResponseDto.java
+│   │   │                   │   │   ├── vehicle
+│   │   │                   │   │   │   ├── LicensePlateRequestDto.java
+│   │   │                   │   │   │   └── LicensePlateResponseDto.java
+│   │   │                   │   │   └── webhook
+│   │   │                   │   │       ├── enums
+│   │   │                   │   │       │   └── EventType.java
+│   │   │                   │   │       └── event
+│   │   │                   │   │           ├── WebhookEventDto.java
+│   │   │                   │   │           ├── WebhookEventEntryDto.java
+│   │   │                   │   │           ├── WebhookEventExitDto.java
+│   │   │                   │   │           ├── WebhookEventParkedDto.java
+│   │   │                   │   │           └── WebhookEventResponseDto.java
+│   │   │                   │   └── persistence
+│   │   │                   │       ├── entity
+│   │   │                   │       │   ├── GarageEntity.java
+│   │   │                   │       │   ├── RevenueEntity.java
+│   │   │                   │       │   ├── SectorEntity.java
+│   │   │                   │       │   ├── SpotEntity.java
+│   │   │                   │       │   ├── TicketEntity.java
+│   │   │                   │       │   ├── VehicleEntity.java
+│   │   │                   │       │   └── VehicleEventEntity.java
+│   │   │                   │       └── repository
+│   │   │                   │           ├── GarageRepository.java
+│   │   │                   │           ├── RevenueRepository.java
+│   │   │                   │           ├── SectorRepository.java
+│   │   │                   │           ├── SpotRepository.java
+│   │   │                   │           ├── TicketRepository.java
+│   │   │                   │           ├── VehicleEventRepository.java
+│   │   │                   │           └── VehicleRepository.java
+│   │   │                   ├── config
+│   │   │                   │   └── RestClientConfig.java
+│   │   │                   ├── service
+│   │   │                   │   ├── exception
+│   │   │                   │   │   ├── revenue
+│   │   │                   │   │   │   ├── RevenueAlreadyExistsException.java
+│   │   │                   │   │   │   └── RevenueNotFoundException.java
+│   │   │                   │   │   ├── sector
+│   │   │                   │   │   │   ├── SectorAlreadyFullException.java
+│   │   │                   │   │   │   └── SectorNotFoundException.java
+│   │   │                   │   │   ├── spot
+│   │   │                   │   │   │   ├── SpotAlreadyOccupiedException.java
+│   │   │                   │   │   │   └── SpotNotFoundException.java
+│   │   │                   │   │   ├── ticket
+│   │   │                   │   │   │   └── TicketNotFoundException.java
+│   │   │                   │   │   └── vehicle
+│   │   │                   │   │       ├── VechicleNotFoundException.java
+│   │   │                   │   │       └── VehicleAlreadyExistsException.java
+│   │   │                   │   ├── revenue
+│   │   │                   │   │   └── RevenueService.java
+│   │   │                   │   ├── sector
+│   │   │                   │   │   └── SectorService.java
+│   │   │                   │   ├── spot
+│   │   │                   │   │   └── SpotService.java
+│   │   │                   │   └── vehicle
+│   │   │                   │       └── VehicleService.java
+│   │   │                   └── startup
+│   │   │                       └── EstaparGarageSimulatorInitializer.java
+
+```
+
+<details>
+ <summary>Descrição do desafio - Clique aqui para expandir</summary>
+
+ # Teste Desenvolvedor Java/Kotlin Backend
 
 Este é o teste para Desevolvedor Java/Kotlin da Estapar.
 
@@ -249,3 +393,4 @@ Response
   "timestamp": "2025-01-01T12:00:00.000Z"
 }
 ```
+</details>
